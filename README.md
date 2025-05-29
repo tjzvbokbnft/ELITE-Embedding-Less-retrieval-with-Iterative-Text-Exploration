@@ -1,6 +1,9 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/arXiv-coming--soon-red.svg?style=flat-square" alt="arXiv coming soon">
+  <a href="https://arxiv.org/abs/2505.11908">
+    <img src="https://img.shields.io/badge/arXiv-2505.11908-b31b1b.svg?style=flat-square" alt="arXiv">
+  </a>
 </p>
+
 
 
 # ELITE: Embedding-Less retrieval with Iterative Text Exploration
@@ -94,5 +97,14 @@ To evaluate the performance of this framework on **NovelQA** and **Marathon**, p
 - MIT 
 
 ## Citation
-- If Embedding-free Retrieval assists in your research, please cite it as follows:
+- If ELITE assists in your research, please cite it as follows:
+@misc{wang2025eliteembeddinglessretrievaliterative,
+      title={ELITE: Embedding-Less retrieval with Iterative Text Exploration}, 
+      author={Zhangyu Wang and Siyuan Gao and Rong Zhou and Hao Wang and Li Ning},
+      year={2025},
+      eprint={2505.11908},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2505.11908}, 
+}
 
