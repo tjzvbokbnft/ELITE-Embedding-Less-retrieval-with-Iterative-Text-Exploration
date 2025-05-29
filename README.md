@@ -95,16 +95,20 @@ To evaluate the performance of this framework on **NovelQA** and **Marathon**, p
 
 ## License
 - MIT 
-
+  
 ## Citation
-- If ELITE assists in your research, please cite it as follows:
-@misc{wang2025eliteembeddinglessretrievaliterative,
-      title={ELITE: Embedding-Less retrieval with Iterative Text Exploration}, 
-      author={Zhangyu Wang and Siyuan Gao and Rong Zhou and Hao Wang and Li Ning},
-      year={2025},
-      eprint={2505.11908},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2505.11908}, 
+
+If **ELITE** assists in your research, please cite us:
+
+```bibtex
+@misc{wang2025elite,
+  title     = {ELITE: Embedding-Less Retrieval with Iterative Text Exploration},
+  author    = {Wang, Zhangyu and Gao, Siyuan and Zhou, Rong and Wang, Hao and Ning, Li},
+  year      = {2025},
+  eprint    = {2505.11908},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url       = {https://arxiv.org/abs/2505.11908}
 }
+
 
