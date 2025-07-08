@@ -1,8 +1,6 @@
-*.json
+
 *.pyc
 *.content
 *.log
-/newData
-/nvQA
 *.DS_Store
 /DEMO_LOG

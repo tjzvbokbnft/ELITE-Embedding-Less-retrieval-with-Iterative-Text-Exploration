@@ -1,4 +1,4 @@
-import src.local_config as local_config
+import local_config as local_config
 import os
 import src.core_functions as core_functions
 import json

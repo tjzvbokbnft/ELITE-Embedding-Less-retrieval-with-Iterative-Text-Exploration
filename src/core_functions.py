@@ -9,7 +9,7 @@ import numpy as np
 import nltk.tokenize
 from nltk.tokenize import word_tokenize
 #from google import genai
-import src.local_config as local_config
+import local_config as local_config
 import src.prompt as prompt
 import ollama
 #from string_noise import noise

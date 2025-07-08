@@ -1,5 +1,5 @@
 from src.dataloader import dataloader
-import src.local_config as local_config
+import local_config as local_config
 import src.prompt as prompt
 import os
 import src.core_functions as core_functions
