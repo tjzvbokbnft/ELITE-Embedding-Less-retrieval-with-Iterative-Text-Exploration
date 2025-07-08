@@ -44,8 +44,8 @@ Large Language Models (LLMs) have achieved impressive progress in natural langua
 
 ```bash
 
-git clone https://github.com/tjzvbokbnft/Embedding-free-Retrieval.git
-cd Embedding-free-Retrieval
+git clone https://github.com/tjzvbokbnft/ELITE-Embedding-Less-retrieval-with-Iterative-Text-Exploration.git
+cd ELITE-Embedding-Less-retrieval-with-Iterative-Text-Exploration
 
 #string_noise --> optional (To use this package, you must manually add it to your site-packages directory.
 #If you don't need it, simply delete the related code. -->using without the importance metric)
