@@ -73,7 +73,7 @@ python reproduce/test_marathon.py
 ![QA Retrieval Accuracy](performance/ret.png)
 
 ### Average Query Time by Context Length and Query Volume
-![Average Query Time](performance/time3d.jpg)
+![Average Query Time](performance/time3d.png)
 
 ### Total Time Consumption by Context Length
 ![Total Time Consumption](performance/Total%20time.jpg)
