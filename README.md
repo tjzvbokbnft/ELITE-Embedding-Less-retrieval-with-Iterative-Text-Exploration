@@ -43,21 +43,27 @@ Large Language Models (LLMs) have achieved impressive progress in natural langua
 ### 1. Clone the repository
 
 ```bash
-
 git clone https://github.com/tjzvbokbnft/ELITE-Embedding-Less-retrieval-with-Iterative-Text-Exploration.git
 cd ELITE-Embedding-Less-retrieval-with-Iterative-Text-Exploration
+# 创建并激活环境
+conda create -n ELITE python=3.11 -y
+conda activate ELITE
+# 安装依赖
+pip install -r requirements.txt
+```
 
+```bash
 #string_noise --> optional (To use this package, you must manually add it to your site-packages directory.
 #If you don't need it, simply delete the related code. -->using without the importance metric)
-./setup.sh
 
 #play with demo
 #config your txt path in demo.py
 #config other parameters in scr/local_config.py
+
 python demo.py
 
 # Reproduce on NovelQA benchmark
-python reproduce/test_novelqa.py
+python reproduce/test_novelQA.py
 
 # Reproduce on Marathon benchmark
 python reproduce/test_marathon.py
