@@ -14,8 +14,8 @@ if __name__ == "__main__":
     os.makedirs(local_config.res_mc_dir, exist_ok=True)
     os.makedirs(local_config.log_directory, exist_ok=True)
     os.makedirs(local_config.output_folder, exist_ok=True)
-    os.makedirs(local_config.matrix_folder, exist_ok=True)
-    data=dataloader(dataset=local_config.dataset)
+    #os.makedirs(local_config.matrix_folder, exist_ok=True)
+    data=dataloader(dataset="novelQA")
     results = {}
     for item in data:#book level
         file_id=item['file_id']
@@ -44,7 +44,7 @@ if __name__ == "__main__":
             retrieve_time_list.append(resp['retrieve_time'])
             prepare_time=resp['prepare_time']
             keywords_extracted=resp['keywords_extracted']
-            importance = utils.compute_imp(query, retrieval)
+            #importance = utils.compute_imp(query, retrieval)
        
        
             #回答
@@ -56,7 +56,7 @@ if __name__ == "__main__":
             TFlist.append(resp_Answer['tfValue'])
             confidence_list.append(resp_Answer['confidenceRate'])
             correctness_list.append(resp_Answer['correctnessRate'])
-            importance_list.append(importance)
+            #importance_list.append(importance)
             DTI_list.append(resp_Answer['DTI'])
             BTS_list.append(resp_Answer['BTS'])
             #打印

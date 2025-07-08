@@ -46,7 +46,8 @@ literary_stopwords ={
     'into','emun',"his","him","her","someone","who","said","few","three","yes","no",'himself',"where","not","all","hundred",
     "would","when",
 }
-
+from datetime import datetime
+_run_stamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
 # ========= 依据基础参数生成的派生路径 =========
 def _recompute_paths() -> None:
     """根据当前基础参数计算派生路径变量。"""
@@ -56,7 +57,7 @@ def _recompute_paths() -> None:
         f"{voter_num}voters+cot+2x{neighbor_num}neighbours+"
         f"deep_search{deep_search_num}+CTX_{num_ctx}"
     )
-    history_folder   = f"History/{dataset}+{common_model}+{matching_method}@{recall_index}"
+    history_folder   = f"REPRODUCE_LOGS/{common_model}+{matching_method}@{recall_index}_{_run_stamp}"
     res_mc_dir       = f"{history_folder}/res_mc"
     log_directory    = f"{history_folder}/logs"
     output_folder    = f"{history_folder}/Test_results"

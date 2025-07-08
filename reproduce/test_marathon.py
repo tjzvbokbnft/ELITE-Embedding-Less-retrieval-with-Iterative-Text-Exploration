@@ -13,7 +13,7 @@ if __name__ == "__main__":
     os.makedirs(local_config.res_mc_dir, exist_ok=True)
     os.makedirs(local_config.log_directory, exist_ok=True)
     os.makedirs(local_config.output_folder, exist_ok=True)
-    data=dataloader(dataset=local_config.dataset)
+    data=dataloader(dataset="marathon")
     results = []
     TFlist=[]#存储每本书
     start_index=0

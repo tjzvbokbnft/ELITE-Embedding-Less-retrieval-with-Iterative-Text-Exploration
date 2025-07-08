@@ -44,6 +44,7 @@ def dataloader(dataset:str,):
                 'correct_answer_dict':correct_answer_dict[file_name_without_extension]
             }
             resp.append(data)
+            return resp
     elif dataset=='marathon':
         jsondir=local_config.marathonjsondir
         with open(jsondir, 'r', encoding='utf-8') as file:

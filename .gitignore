@@ -4,3 +4,4 @@
 *.log
 *.DS_Store
 /DEMO_LOG
+/REPRODUCE_LOGS
