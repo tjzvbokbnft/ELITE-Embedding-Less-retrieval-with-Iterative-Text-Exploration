@@ -68,6 +68,22 @@ python reproduce/test_novelQA.py
 # Reproduce on Marathon benchmark
 python reproduce/test_marathon.py
 ```
+```bash
+# 全默认（含默认小说路径）
+python cli_agent.py
+# 只改模型名与邻居数
+python cli_agent.py --common_model llama3.1:latest --neighbor_num 2
+# 覆盖全部超参 & 指定小说
+python cli_agent.py \
+  --novel nvQA/Frankenstein.txt \
+  --recall_index 6 \
+  --neighbor_num 15 \
+  --deep_search_index 4 \
+  --deep_search_num 25 \
+  --voter_num 5 \
+  --num_ctx 10000 \
+  --common_model llama3.1:latest
+```
 ### 2.Basic Usages
 
 
