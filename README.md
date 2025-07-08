@@ -40,18 +40,21 @@ Large Language Models (LLMs) have achieved impressive progress in natural langua
 
 ## 🔧 Installation & Quick Start
 
-### 1. Clone the repository
+###  Environment setup
 
 ```bash
+# Clone the repository
 git clone https://github.com/tjzvbokbnft/ELITE-Embedding-Less-retrieval-with-Iterative-Text-Exploration.git
 cd ELITE-Embedding-Less-retrieval-with-Iterative-Text-Exploration
-# 创建并激活环境
+
+# Create & activate a clean conda env (Python 3.11)
 conda create -n ELITE python=3.11 -y
 conda activate ELITE
-# 安装依赖
+
+# Install core dependencies
 pip install -r requirements.txt
 ```
-
+### Quick demo
 ```bash
 #string_noise --> optional (To use this package, you must manually add it to your site-packages directory.
 #If you don't need it, simply delete the related code. -->using without the importance metric)
@@ -61,19 +64,22 @@ pip install -r requirements.txt
 #config other parameters in scr/local_config.py
 
 python demo.py
-
+```
+### Benchmark reproduction
+```
 # Reproduce on NovelQA benchmark
 python reproduce/test_novelQA.py
 
 # Reproduce on Marathon benchmark
 python reproduce/test_marathon.py
 ```
+### Command-line interface (CLI)
 ```bash
-# 全默认（含默认小说路径）
+# Minimal run (uses default novel path)
 python cli_agent.py
-# 只改模型名与邻居数
+# Change only the model & neighbor count
 python cli_agent.py --common_model llama3.1:latest --neighbor_num 2
-# 覆盖全部超参 & 指定小说
+# Full control
 python cli_agent.py \
   --novel nvQA/Frankenstein.txt \
   --recall_index 6 \
@@ -84,8 +90,34 @@ python cli_agent.py \
   --num_ctx 10000 \
   --common_model llama3.1:latest
 ```
-### 2.Basic Usages
+### Use as an API
+```
+from pathlib import Path
+from src import core_functions
 
+# 1️⃣  Load text
+context = Path("nvQA/Frankenstein.txt").read_text(encoding="utf-8")
+
+# 2️⃣  Bootstrap cache & query
+keywords_cache = ""        # Empty on first call
+question       = "What motivates Victor to create life?"
+
+# 3️⃣  Retrieve
+resp = core_functions.retrieve_useful(
+    text_input=context,
+    query=question,
+    cached_keywords=keywords_cache,
+)
+
+# 4️⃣  Grab results
+relevant_text   = resp["retrieve_data"]
+new_keywords    = resp["keywords_extracted"]
+keywords_cache += new_keywords      # accumulate for next round
+
+print(relevant_text)
+print("Newly mined keywords:", new_keywords)
+
+```
 
 
 ## Framework
