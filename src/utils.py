@@ -4,7 +4,7 @@ import src.core_functions as core_functions
 import time
 import logging
 import ollama
-from string_noise import noise
+# from string_noise import noise
 import numpy as np
 from numpy.linalg import norm
 def judge_options(query:str,queryWithOption:str):
@@ -23,33 +23,33 @@ def construct_context(retrieval:str,queryWithOption:str):
     final_input=retrieval+"\n\n"+prompt.question_prompt_cot+"\n\n"+queryWithOption+"\n\n"+ prompt.filter_prompt
     return final_input
 
-def mask_text(text, p, n):
-    if p != 0:
-        p = 1 - pow((1 - p), 1/n) #since this is a process of n randomizations
-    #print(p)
-    if(n >= 1):
-        text = noise.ocr(text, probability=p)
-    if(n >= 2):
-        text = noise.moe(text, probability=p) 
-    if(n >= 3):
-        text = noise.homoglyph(text, probability=p)
-    return text
+# def mask_text(text, p, n):
+#     if p != 0:
+#         p = 1 - pow((1 - p), 1/n) #since this is a process of n randomizations
+#     #print(p)
+#     if(n >= 1):
+#         text = noise.ocr(text, probability=p)
+#     if(n >= 2):
+#         text = noise.moe(text, probability=p) 
+#     if(n >= 3):
+#         text = noise.homoglyph(text, probability=p)
+#     return text
 
 def cos_similarity(vec1, vec2):
     return (np.dot(vec1, vec2) / (norm(vec1) * norm(vec2)))
 
-def compute_imp(query, ori_memory):
-    print("start computing")
-    q_prompt = f"You will be given a question and some information that could be used to answer the question. Your task is to answer the question. Note that not all information are useful to your answer, they could be irrelevant. You SHOULD disregard all irrelevent sentences and NOT make ANY inference based on YOUR knowledge. You DO NOT need to describe the text. Here is the question: {query}"
-    ori_text = core_functions.send(q_prompt + "\nGiven the information: " + ori_memory)
-    baseline_text = mask_text(ori_memory, 0.1, 3)
-    noisy_text = mask_text(ori_memory, 0.9, 3)
-    baseline_text = core_functions.send(q_prompt + "\nGiven the information: " + baseline_text)
-    noisy_text = core_functions.send(q_prompt + "\nGiven the information: " + noisy_text)
-    ori_emb = ollama.embed(model="mxbai-embed-large", input=ori_text)["embeddings"][0]
-    baseline_emb = ollama.embed(model="mxbai-embed-large", input=baseline_text)["embeddings"][0]
-    noisy_emb = ollama.embed(model="mxbai-embed-large", input=noisy_text)["embeddings"][0]
-    return (2 - cos_similarity(ori_emb, noisy_emb) - cos_similarity(baseline_emb, noisy_emb))/2
+# def compute_imp(query, ori_memory):
+#     print("start computing")
+#     q_prompt = f"You will be given a question and some information that could be used to answer the question. Your task is to answer the question. Note that not all information are useful to your answer, they could be irrelevant. You SHOULD disregard all irrelevent sentences and NOT make ANY inference based on YOUR knowledge. You DO NOT need to describe the text. Here is the question: {query}"
+#     ori_text = core_functions.send(q_prompt + "\nGiven the information: " + ori_memory)
+#     baseline_text = mask_text(ori_memory, 0.1, 3)
+#     noisy_text = mask_text(ori_memory, 0.9, 3)
+#     baseline_text = core_functions.send(q_prompt + "\nGiven the information: " + baseline_text)
+#     noisy_text = core_functions.send(q_prompt + "\nGiven the information: " + noisy_text)
+#     ori_emb = ollama.embed(model="mxbai-embed-large", input=ori_text)["embeddings"][0]
+#     baseline_emb = ollama.embed(model="mxbai-embed-large", input=baseline_text)["embeddings"][0]
+#     noisy_emb = ollama.embed(model="mxbai-embed-large", input=noisy_text)["embeddings"][0]
+#     return (2 - cos_similarity(ori_emb, noisy_emb) - cos_similarity(baseline_emb, noisy_emb))/2
 
 def augment_keywords(keywords, query, retrieve_data):
     prompt = f"""You are given a database that contains all information you need to solve a problem, but you have to find the keywords used to search for the correct information. 

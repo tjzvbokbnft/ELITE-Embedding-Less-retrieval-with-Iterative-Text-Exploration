@@ -1,118 +1,135 @@
 import os
-import src.core_functions as core_functions
-import src.utils as utils
-import src.local_config as local_config
 import time
-# 配置文件路径
-# txtdir = "In put your txt document path here"
+from pathlib import Path
 
-# # start_file = "Wuthering Heights.txt"
-
-# # # 读取小说文本
-# # files = sorted(os.listdir(txtdir))
-# # start_index = files.index(start_file) if start_file in files else 0
-# # file = files[start_index]
-
-# with open(os.path.join(txtdir, file), "r") as f:
-#     context = f.read()
+from src import core_functions, utils, local_config
 
 
-txt_path = "Input your txt document path here"  # 例如: "data/Wuthering_Heights.txt"
-
-# 获取文件名用于后续展示
-file = os.path.basename(txt_path)
-
-# 读取小说文本内容
-with open(txt_path, "r", encoding="utf-8") as f:
-    context = f.read()
-
-
-time_stamp=time.time()
-DEMO_LOG_DIR=f"DEMO_LOG/{local_config.common_model}+{time_stamp}"
-os.makedirs(DEMO_LOG_DIR, exist_ok=True)
-
-
-
-
-# 交互式循环
-print(f"\n🧠 Loaded base context: {file}")
-print("💬 Ask questions about the base context. Type 'exit' to quit.\n")
-
-cold_start_query_list = [
-    "What core themes and genres best describe this novel?",
-    "What is the central narrative hook or premise introduced early in the story?",
-    "How would you describe the author's writing style and tone, based on the opening chapters?",
-
-]
+def read_context():
+    """Interactively ask the user for a text file path and return its content + filename."""
+    while True:
+        txt_path = input("请输入小说文件路径（或输入 q 退出）：").strip()
+        if txt_path.lower() in {"q", "quit", "exit"}:
+            raise SystemExit("已退出。")
+        path = Path(txt_path)
+        if path.is_file():
+            try:
+                with path.open("r", encoding="utf-8") as f:
+                    return f.read(), path.name
+            except Exception as err:
+                print(f"❌ 读取文件时出错: {err}")
+        else:
+            print("❌ 找不到文件，请重新输入有效路径。")
 
 
-temp_memory=""
-cache_keywords=""
-cold_start_index=len(cold_start_query_list)
-round=0
-while True:
-    if round<cold_start_index:
-        query=cold_start_query_list[round]
-        print(query)
-    else:
-        query = input("You: ")
-        if query.lower() in ['exit', 'quit']:
-            print("👋 Exiting.")
-            break
-    new_keywords=""
-    # 检索相关文本
-    if len(cache_keywords)!= 0:
-        query = query
-    if len(temp_memory)>=1000:
-        resp = core_functions.retrieve_useful(text_input=temp_memory, query=query,cached_keywords=cache_keywords)
-        memory_retrieval = resp['retrieve_data']
-        new_keywords+=resp["keywords_extracted"]
-    else:
-        memory_retrieval=temp_memory
-    resp = core_functions.retrieve_useful(text_input=context, query=query,cached_keywords=cache_keywords)
-    context_retrieval = resp['retrieve_data']
-    new_keywords+=resp["keywords_extracted"]
-  
-    # 构造最终输入
-    final_input = "RETRIEVAL from context"+context_retrieval+"\n\nRETRIVAL FROM AGENT MEMORY:\n\n"+memory_retrieval  + "\n\nBASED on the context retrieval and agent memory above, response to the user's query or request:" + query
+def main():
+    """Main interactive loop."""
+    context, file_name = read_context()
 
-    # 模型作答
-    final_response = core_functions.send(final_input)
-    temp_memory+=final_response
-    mem_keywords=core_functions.send(
-            f"Context: {query}" 
-            "\nPROMPT: Extract proper keywords/element/entity/location from given context "
+    print(f"\n🧠 已加载文本: {file_name}")
+    print("💬 现在可就该文本内容进行提问，输入 'exit' 退出。\n")
+
+    cold_start = [
+        "What core themes and genres best describe this novel?",
+        "What is the central narrative hook or premise introduced early in the story?",
+        "How would you describe the author's writing style and tone, based on the opening chapters?",
+    ]
+
+    cache_keywords = ""
+    memory = ""
+    timestamp = int(time.time())
+    log_dir = Path(f"DEMO_LOG/{local_config.common_model}+{timestamp}")
+    log_dir.mkdir(parents=True, exist_ok=True)
+
+    round_idx = 0
+    while True:
+        # Determine user query
+        if round_idx < len(cold_start):
+            query = cold_start[round_idx]
+            print(query)
+        else:
+            query = input("You: ").strip()
+            if query.lower() in {"exit", "quit"}:
+                print("👋 Exiting.")
+                break
+
+        new_keywords = ""
+        mem_retrieval = ""
+
+        # Retrieve from agent memory
+        if memory:
+            resp_mem = core_functions.retrieve_useful(
+                text_input=memory,
+                query=query,
+                cached_keywords=cache_keywords,
+            )
+            mem_retrieval = resp_mem["retrieve_data"]
+            new_keywords += resp_mem["keywords_extracted"]
+
+        # Retrieve from context
+        resp_ctx = core_functions.retrieve_useful(
+            text_input=context,
+            query=query,
+            cached_keywords=cache_keywords,
+        )
+        ctx_retrieval = resp_ctx["retrieve_data"]
+        new_keywords += resp_ctx["keywords_extracted"]
+
+        # Compose final input for the model
+        final_input = (
+            f"RETRIEVAL FROM CONTEXT:\n{ctx_retrieval}\n\n"
+            f"RETRIEVAL FROM MEMORY:\n{mem_retrieval}\n\n"
+            f"BASED on the retrievals above, respond to the user's query: {query}"
+        )
+
+        answer = core_functions.send(final_input)
+        memory += answer
+
+        # Extract keywords from the answer
+        mem_keywords = core_functions.send(
+            "Context: "
+            f"{query}\n"
+            "PROMPT: Extract proper keywords/element/entity/location from given context "
             "Output the keywords **ONLY** in the following format: "
-            "\n[\"keyword1\", \"keyword2\", \"keyword3\", ...] (A JSON array of strings). "
-            "DO NOT include any extra text, explanation, or formatting!!"
-            "Note: Do not include 'chapter' as a keyword."
-        )   
-    new_keywords+=mem_keywords
-    cache_keywords+=new_keywords
-    print("\n🤖 Agent: \033[1;32m" + "="*20 + "\033[0m\n")
-    print("\n🤖 Agent: \033[1;32m" + final_response.strip() + "\033[0m\n")
-    print("\n🤖 Agent: \033[1;32m" + "="*20 + "\033[0m\n")
-    # ✅ 写入 mem_log.txt 文件
-    with open(f"{DEMO_LOG_DIR}/agent_mem.txt", "a", encoding="utf-8") as log_file:
-        log_file.write(f"\n\n==== Round {round} ====\n")
-        log_file.write(f"🧍‍♂️ User: {query.strip()}\n")
-        log_file.write(f"🧠 Agent Memory(newly updated):\n{final_response.strip()}\n")
-        # ✅ 写入 mem_log.txt 文件
-    with open(f"{DEMO_LOG_DIR}/context_retrieval_log.txt", "a", encoding="utf-8") as log_file:
-        log_file.write(f"\n\n==== Round {round} ====\n")
-        log_file.write(f"🧍‍♂️ User: {query.strip()}\n")
-        log_file.write(f"🤖 context retrieval:\n{context_retrieval.strip()}\n")
-    with open(f"{DEMO_LOG_DIR}/mem_retrieval_log.txt", "a", encoding="utf-8") as log_file:
-        log_file.write(f"\n\n==== Round {round} ====\n")
-        log_file.write(f"🧍‍♂️ User: {query.strip()}\n")
-        log_file.write(f"🤖 mem retrieval:\n{memory_retrieval}\n")
-    with open(f"{DEMO_LOG_DIR}/keywords_cached.txt", "a", encoding="utf-8") as log_file:
-        log_file.write(f"\n\n==== Round {round} ====\n")
-        log_file.write(f"🧍‍♂️ User: {query.strip()}\n")
-        log_file.write(f"🤖 keywords cached:\n{new_keywords}\n")
-    round+=1
+            "[\"keyword1\", \"keyword2\", \"keyword3\"]"
+        )
+        new_keywords += mem_keywords
+        cache_keywords += new_keywords
+
+        # Display answer
+        print(f"\n🤖 Agent:\n{answer.strip()}\n{'=' * 20}")
+
+        # Logging
+        _write_logs(
+            round_idx,
+            log_dir,
+            query,
+            answer,
+            ctx_retrieval,
+            mem_retrieval,
+            new_keywords,
+        )
+
+        round_idx += 1
 
 
+def _write_logs(round_idx, log_dir, query, answer, ctx_retrieval, mem_retrieval, new_keywords):
+    """Helper function to write logs in a consistent manner."""
+    _append(log_dir / "agent_mem.txt", round_idx, query, "🧠 Agent Memory (new):", answer)
+    _append(log_dir / "context_retrieval_log.txt", round_idx, query, "🤖 Context retrieval:", ctx_retrieval)
+    _append(log_dir / "mem_retrieval_log.txt", round_idx, query, "🤖 Memory retrieval:", mem_retrieval)
+    _append(log_dir / "keywords_cached.txt", round_idx, query, "🤖 Keywords cached:", new_keywords)
 
-    
-       
+
+def _append(path: Path, round_idx: int, user_query: str, header: str, body: str):
+    with path.open("a", encoding="utf-8") as f:
+        f.write(f"\n\n==== Round {round_idx} ====\n")
+        f.write(f"🧍‍♂️ User: {user_query}\n")
+        f.write(f"{header}\n{body.strip()}\n")
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n👋 Exiting by user interruption.")

@@ -1,16 +1,18 @@
 import logging
+import ollama
 from ollama import Client
 import numpy as np
 import requests
 import re
 import time
 import numpy as np
+import nltk.tokenize
 from nltk.tokenize import word_tokenize
 #from google import genai
 import src.local_config as local_config
 import src.prompt as prompt
 import ollama
-from string_noise import noise
+#from string_noise import noise
 import numpy as np
 from numpy.linalg import norm
 from src.prompt import format_prompt
@@ -550,32 +552,32 @@ def calculate_score(correct_answers, user_answers):
     accuracy = correct_count / total_count  # 计算正确率
     return accuracy
 
-def mask_text(text, p, n):
-    if p != 0:
-        p = 1 - pow((1 - p), 1/n) #since this is a process of n randomizations
-    #print(p)
-    if(n >= 1):
-        text = noise.ocr(text, probability=p)
-    if(n >= 2):
-        text = noise.moe(text, probability=p) 
-    if(n >= 3):
-        text = noise.homoglyph(text, probability=p)
-    return text
+# def mask_text(text, p, n):
+#     if p != 0:
+#         p = 1 - pow((1 - p), 1/n) #since this is a process of n randomizations
+#     #print(p)
+#     if(n >= 1):
+#         text = noise.ocr(text, probability=p)
+#     if(n >= 2):
+#         text = noise.moe(text, probability=p) 
+#     if(n >= 3):
+#         text = noise.homoglyph(text, probability=p)
+#     return text
 
 def cos_similarity(vec1, vec2):
     return (np.dot(vec1, vec2) / (norm(vec1) * norm(vec2)))
 
-def compute_imp(query, ori_memory):
-    q_prompt = f"You will be given a question and some information that could be used to answer the question. Your task is to answer the question. Note that not all information are useful to your answer, they could be irrelevant. You SHOULD disregard all irrelevent sentences and NOT make ANY inference based on YOUR knowledge. You DO NOT need to describe the text. Here is the question: {query}"
-    ori_text = send(q_prompt + "\nGiven the information: " + ori_memory)
-    baseline_text = mask_text(ori_memory, 0.1, 3)
-    noisy_text = mask_text(ori_memory, 0.9, 3)
-    baseline_text = send(q_prompt + "\nGiven the information: " + baseline_text)
-    noisy_text = send(q_prompt + "\nGiven the information: " + noisy_text)
-    ori_emb = ollama.embed(model="mxbai-embed-large", input=ori_text)["embeddings"][0]
-    baseline_emb = ollama.embed(model="mxbai-embed-large", input=baseline_text)["embeddings"][0]
-    noisy_emb = ollama.embed(model="mxbai-embed-large", input=noisy_text)["embeddings"][0]
-    return (2 - cos_similarity(ori_emb, noisy_emb) - cos_similarity(baseline_emb, noisy_emb))/2
+# def compute_imp(query, ori_memory):
+#     q_prompt = f"You will be given a question and some information that could be used to answer the question. Your task is to answer the question. Note that not all information are useful to your answer, they could be irrelevant. You SHOULD disregard all irrelevent sentences and NOT make ANY inference based on YOUR knowledge. You DO NOT need to describe the text. Here is the question: {query}"
+#     ori_text = send(q_prompt + "\nGiven the information: " + ori_memory)
+#     baseline_text = mask_text(ori_memory, 0.1, 3)
+#     noisy_text = mask_text(ori_memory, 0.9, 3)
+#     baseline_text = send(q_prompt + "\nGiven the information: " + baseline_text)
+#     noisy_text = send(q_prompt + "\nGiven the information: " + noisy_text)
+#     ori_emb = ollama.embed(model="mxbai-embed-large", input=ori_text)["embeddings"][0]
+#     baseline_emb = ollama.embed(model="mxbai-embed-large", input=baseline_text)["embeddings"][0]
+#     noisy_emb = ollama.embed(model="mxbai-embed-large", input=noisy_text)["embeddings"][0]
+#     return (2 - cos_similarity(ori_emb, noisy_emb) - cos_similarity(baseline_emb, noisy_emb))/2
 
 def augment_keywords( query, retrieve_data):
     prompt = f"""
