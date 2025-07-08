@@ -13,9 +13,9 @@ Large Language Models (LLMs) have achieved impressive progress in natural langua
 ## Table of Contents
 - [Features](#features)
 - [Project Structure](#project-structure)
+- [🔧 Installation & Quick Start](#-installation--quick-start)
 - [Framework](#Framework)
 - [Performance Analysis](#Performance-Analysis)
-- [🔧 Installation & Quick Start](#-installation--quick-start)
 - [📄 How to Get Results on NovelQA and Marathon](#-how-to-get-results-on-novelqa-and-marathon)
 
 
@@ -37,20 +37,6 @@ Large Language Models (LLMs) have achieved impressive progress in natural langua
 - `requirements.txt`: List of dependencies.
 - `.gitignore`: Standard ignored files.
 - `Readme.md`: Project documentation.
-
-## Framework
-![framework](framework/framework1.png)
-## Performance Analysis
-
-### QA Retrieval Accuracy
-![QA Retrieval Accuracy](performance/ret.png)
-
-### Average Query Time by Context Length and Query Volume
-![Average Query Time](performance/Time%203D.jpg)
-
-### Total Time Consumption by Context Length
-![Total Time Consumption](performance/Total%20time.jpg)
-
 
 ## 🔧 Installation & Quick Start
 
@@ -76,6 +62,21 @@ python reproduce/test_novelqa.py
 python reproduce/test_marathon.py
 ```
 ### 2.Basic Usages
+
+
+
+## Framework
+![framework](framework/framework1.png)
+## Performance Analysis
+
+### QA Retrieval Accuracy
+![QA Retrieval Accuracy](performance/ret.png)
+
+### Average Query Time by Context Length and Query Volume
+![Average Query Time](performance/time3d.jpg)
+
+### Total Time Consumption by Context Length
+![Total Time Consumption](performance/Total%20time.jpg)
 
 
 ## 📄 How to Get Results on NovelQA and Marathon
