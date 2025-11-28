@@ -79,6 +79,14 @@ Alice lived in a small village near the mountains.
 Every morning she walked through the forest to reach the river,
 where she collected fresh water for her family.
 One day, she discovered strange footprints leading deeper into the woods.
+
+Curiosity tugged at her more strongly than fear. The footprints were larger than any animal she knew, yet the shape was oddly delicate, almost as if whoever left them walked lightly despite their size. She followed the trail past familiar trees and into a part of the forest she had never dared to explore.
+
+The deeper she went, the quieter the forest became. The usual chatter of birds faded, replaced by a soft humming sound she couldn’t quite place. Sunlight filtered through the tall pines in thin golden slices, making the footprints glimmer faintly as if dusted with silver.
+
+After nearly an hour of walking, Alice reached a small clearing she didn’t know existed. In the center stood an enormous stone, covered in vines that glowed with a faint bluish light. The footprints circled the stone and vanished behind it, as though whoever made them had walked straight through the rock.
+
+Alice hesitated. Part of her wanted to run back to the safety of her village. Another part—the part that had always wondered what lay beyond the mountains—told her she was closer to a truth she had never imagined. She took a deep breath, stepped forward, and gently placed her hand on the glowing stone.
 """
 
 query = "Why did Alice go to the river every morning?"
