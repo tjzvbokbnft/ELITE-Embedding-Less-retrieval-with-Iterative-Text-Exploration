@@ -40,6 +40,55 @@ Large Language Models (LLMs) have achieved impressive progress in natural langua
 
 ## 🔧 Installation & Quick Start
 
+### Use with pip install
+```bash
+conda create -n your_env python=3.11
+conda activate your_env
+pip install eliteRAG
+```
+here is a minial example to use this:
+```bash
+import elite.core_functions as cf
+import local_config as cfg
+
+# ====== Configuration ======
+cfg.set_config(
+    recall_index=25,
+    neighbor_num=1,
+    deep_search_index=5,
+    deep_search_num=25,
+    voter_num=5,
+    num_ctx=70000,
+
+    retrieve_iter_max_iterations=5,
+    retrieve_iter_suff_provider="deepseek",
+
+    common_model="llama3.1:latest",
+    llm_provider="ollama",
+    use_fallback=True,
+
+    deepseek_api_key="",
+    deepseek_model="deepseek-chat",
+    deepseek_base_url="https://api.deepseek.com/v1",
+)
+
+# ====== Minimal example ======
+text = """
+Alice lived in a small village near the mountains.
+Every morning she walked through the forest to reach the river,
+where she collected fresh water for her family.
+One day, she discovered strange footprints leading deeper into the woods.
+"""
+
+query = "Why did Alice go to the river every morning?"
+
+retrieve_resp = cf.retrieve_iter(text, query)
+answer = cf.send(retrieve_resp["retrieve_data"] + query)
+
+print(answer)
+
+```
+
 ###  Environment setup
 
 ```bash
