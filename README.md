@@ -65,6 +65,7 @@ cfg.set_config(
 
     common_model="llama3.1:latest",
     llm_provider="ollama",
+    url = "http://localhost:11434/api/generate",
     use_fallback=True,
 
     deepseek_api_key="",
